@@ -7,11 +7,7 @@ class Success extends Component {
     return (
       <div>
         <h1 className="ui centered">Details Successfully Saved</h1>
-        {Object.keys(values).map((arow) => (
-          <p>
-            {arow}:{values[arow]}
-          </p>
-        ))}
+        {console.log(values)}
       </div>
     );
   }

@@ -1,7 +1,7 @@
 // PersonalDetails.jsx
 import React, { Component } from "react";
 import { Form, Button, Select } from "semantic-ui-react";
-import { DateInput } from "semantic-ui-calendar-react";
+import DatePicker from 'react-datepicker';
 
 const levelOptions = [
   { key: "nb", value: "nb", text: "Newbie" },
@@ -11,8 +11,17 @@ const levelOptions = [
 ];
 
 class PersonalDetails extends Component {
+
+  constructor(){
+    super();
+    this.state = {
+        errors: {}
+    }
+  }
+
   saveAndContinue = (e) => {
     e.preventDefault();
+    if(this.validate())
     this.props.nextStep();
   };
 
@@ -20,6 +29,29 @@ class PersonalDetails extends Component {
     e.preventDefault();
     this.props.prevStep();
   };
+
+
+  validate() {
+    let fields = this.props.values;
+    let errors = {};
+    let formIsValid = true;
+
+    if (!fields["date"]) {
+      formIsValid = false;
+      errors["date"] = "*Please select a date.";
+    }
+
+    if (!fields["exp"]) {
+      formIsValid = false;
+      errors["exp"] = "*Please select the level.";
+    }
+
+    this.setState({
+      errors: errors
+    });
+
+    return formIsValid;
+  }
 
   render() {
     const { values } = this.props;
@@ -31,14 +63,14 @@ class PersonalDetails extends Component {
         <h1 className="ui centered">Joining Date and Location Details</h1>
         <Form.Field>
           <label>Date of Joining</label>
-          <DateInput
-            name="date"
-            placeholder="Date"
-            value={values.date}
-            iconPosition="right"
-            onChange={this.props.onChange}
+          <DatePicker
+              selected={ values.date }
+              onChange={ this.props.onChange }
+              name="startDate"
+              dateFormat="MM/dd/yyyy"
           />
         </Form.Field>
+        <div className="error">{this.state.errors.date}</div>
         <Form.Field>
           <label>Level of Experince</label>
           <Select
@@ -48,10 +80,8 @@ class PersonalDetails extends Component {
             onChange={this.props.onSelectChange}
           />
         </Form.Field>
-        {values.errorUser && <p className="error">Please Fill all the details</p>}
-        <Button className="rounded" onClick={this.saveAndContinue}>
-          Continue
-        </Button>
+        <div className="error">{this.state.errors.exp}</div>
+        <div className="rounded-button" onClick={this.saveAndContinue}>Continue </div>
       </Form>
     );
   }

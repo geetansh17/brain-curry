@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
+import "react-datepicker/dist/react-datepicker.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Progress } from "semantic-ui-react";
 import UserDetails from "./UserDetails";
 import PersonalDetails from "./PersonalDetails";
@@ -13,14 +15,12 @@ class App extends Component {
     location: null,
     noOfPlayers: null,
     captionName: null,
-    date: "",
-    percent: 0,
+    date: new Date(),
+    percent:25,
     exp: null,
     name: null,
     email: null,
-    number: null,
-    errorUser: false,
-    emailError:false
+    number: null
   };
 
   validator = (step) => {
@@ -56,10 +56,9 @@ class App extends Component {
 
   nextStep = () => {
     const { step } = this.state;
-    if (!this.validator(step)) return;
     this.setState((prevState) => ({
       step: step + 1,
-      percent: prevState.percent >= 100 ? 0 : prevState.percent + 33.33,
+      percent: prevState.percent >= 100 ? 0 : prevState.percent + 25,
       errorUser:false
     }));
   };
@@ -68,21 +67,18 @@ class App extends Component {
     const { step, percent } = this.state;
     this.setState({
       step: step - 1,
-      percent: percent - 33.33,
+      percent: percent - 25,
       errorUser:false
     });
   };
 
   handleChange = (input) => (event) => {
-    if (!event.target.value) return;
-    if(input==='email')
-        this.ValidateEmail(event.target.value);
     this.setState({ [input]: event.target.value, errorUser: false });
   };
 
-  onChange = (date, text, mode) => {
+  onChange = (date) => {
     this.setState({
-      date: text.value,
+      date: date,
     });
   };
 
@@ -93,20 +89,20 @@ class App extends Component {
     });
   };
 
-  ValidateEmail = (mail) => {
-    if (
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-        mail
-      )
-    ) {
-      return this.setState({
-        emailError: false,
-      });
-    }
-    this.setState({
-      emailError: true,
-    });
-  };
+  // ValidateEmail = (mail) => {
+  //   if (
+  //     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+  //       mail
+  //     )
+  //   ) {
+  //     return this.setState({
+  //       emailError: false,
+  //     });
+  //   }
+  //   this.setState({
+  //     emailError: true,
+  //   });
+  // };
 
   component = (step, values) => {
     switch (step) {
@@ -154,9 +150,7 @@ class App extends Component {
       number,
       date,
       exp,
-      captionName,
-      errorUser,
-      emailError
+      captionName
     } = this.state;
     const values = {
       teamName,
@@ -167,21 +161,21 @@ class App extends Component {
       number,
       date,
       exp,
-      captionName,
-      errorUser,
-      emailError
+      captionName
     };
     return (
-      <Container textAlign="center">
+      <div>
         <Progress
           inverted
           color="blue"
           percent={this.state.percent}
           indicating
         />
+      <Container textAlign="center">
         <h1>FOOTBALL REGISTRATION</h1>
         {this.component(step, values)}
       </Container>
+      </div>
     );
   }
 }
