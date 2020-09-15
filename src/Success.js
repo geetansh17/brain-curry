@@ -6,7 +6,7 @@ class Success extends Component {
     const { values } = this.props;
     return (
       <div>
-        <h1 className="ui centered">Details Successfully Saved</h1>
+        <h1 className="ui centered">Details Successfully Saved ,check the console</h1>
         {console.log(values)}
       </div>
     );
